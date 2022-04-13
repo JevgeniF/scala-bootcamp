@@ -1,5 +1,7 @@
 package com.evolutiongaming.bootcamp.basics
 
+import scala.math.abs
+
 object Basics {
   // Let's start by quickly going through the basic building blocks of Scala programs.
 
@@ -58,7 +60,7 @@ object Basics {
   val bool2: Boolean = false
 
   // Exercise. List all boolean values.
-  val allBooleans: Set[Boolean] = Set( /* add values here, separated by commas */ )
+  val allBooleans: Set[Boolean] = Set( true, false )
 
   /* Common boolean operations:
       !false          // true - `!` is negation
@@ -235,10 +237,10 @@ object Basics {
   // Try defining it using both String concatenation and interpolation.
   //
   // Note. `???` can be used to indicate code that is yet to be implemented.
-  def helloMethod(name: String): String = ???
+  def helloMethod(name: String): String = s"Hello, ${name}!"
 
   // Exercise. Define a method "add" which takes two integers and returns their sum.
-  def add(a: Int, b: Int): Int = a * 42 - b / 4 // replace with a correct implementation
+  def add(a: Int, b: Int): Int = a + b // replace with a correct implementation
 
   // You can use parameter names to specify them in a different order
   val sum1 = add(b = 2, a = 3) // addition is commutative though so it doesn't change the result
@@ -260,11 +262,11 @@ object Basics {
   // Exercise. Implement `helloFunction` using `helloMethod` you implemented above. Why was the type
   // annotation skipped when defining `helloFunction`?
 
-  val helloFunction: String => String = (name: String) => /* implement here */ name
+  val helloFunction: String => String = (name: String) => helloMethod(name)
 
   // Exercise. Using the aforementioned String `length` implement a `stringLength` function which returns
   // the length of the String passed.
-  val stringLength: String => Int = (s: String) => /* implement here */ s.hashCode()
+  val stringLength: String => Int = (s: String) => s.length
 
   // If each argument of a function is used exactly once, you can use `_` to refer to them
   val addFunction: (Int, Int) => Int = _ + _
@@ -325,7 +327,7 @@ object Basics {
 
   def power(n: Byte): Int => Long = { x: Int =>
     // implement here
-    (x + n).toLong
+    Math.pow(x, n).toLong
   }
 
   // Polymorphic methods, or methods which take type parameters
@@ -396,24 +398,41 @@ object Basics {
   // More exercises to help internalise the "types define the set of possible values that a value can have":
 
   // Exercise. List all values of the type `Option[Boolean]`:
-  val allOptionBooleans: Set[Option[Boolean]] = Set()
+  val allOptionBooleans: Set[Option[Boolean]] = Set(Some(true), Some(false), None)
 
   // Exercise. List all values of the type `Either[Unit, Boolean]`:
-  val allEitherUnitBooleans: Set[Either[Unit, Boolean]] = Set()
+  val allEitherUnitBooleans: Set[Either[Unit, Boolean]] = Set(Left(), Right(true), Right(false))
 
   // Exercise. List all values of the type `Either[Boolean, Boolean]`:
-  val allEitherBooleanBooleans: Set[Either[Boolean, Boolean]] = Set()
+  val allEitherBooleanBooleans: Set[Either[Boolean, Boolean]] = Set(Left(true), Left(false), Right(false), Right(true))
 
   // Exercise. List all values of the type `(Boolean, Boolean)`:
-  val allTupleBooleanBooleans: Set[(Boolean, Boolean)] = Set()
+  val allTupleBooleanBooleans: Set[(Boolean, Boolean)] = Set((true, true), (true, false), (false, false), (false, true))
 
   // Question. Can we make a `Set` with all possible `Byte` values? `Double` values? `String` values?
 
   // Homework. Implement functions that calculate https://en.wikipedia.org/wiki/Least_common_multiple and
   // https://en.wikipedia.org/wiki/Greatest_common_divisor for integers.
 
-  def lcm(a: Int, b: Int): Int = ???
-  def gcd(a: Int, b: Int): Int = ???
+  def lcm(a: Int, b: Int): Int = {
+    val lcm = if (gcd(a, b) != 0) abs(a * b) / gcd(a, b) else 0
+    lcm
+  }
+
+  def gcd(a: Int, b: Int): Int = {
+    var a1 = abs(a)
+    var b1 = abs(b)
+
+    if (a1 == 0 || b1 == 0) return 0
+    while (a1 > 0 && b1 > 0) {
+      if (a1 > b1) {
+        a1 = a1 - b1
+      } else {
+        b1 = b1 - a1
+      }
+    }
+    if (a1 != 0) a1 else b1
+  }
 
   // Create a new Git public repository for your homework solutions, use `basics` package for this homework.
   // You can use `sbt new scala/hello-world.g8` to start a new bare-bones Scala SBT project.
