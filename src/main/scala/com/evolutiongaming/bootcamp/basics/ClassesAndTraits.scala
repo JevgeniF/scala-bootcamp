@@ -99,13 +99,13 @@ object ClassesAndTraits {
   // case-to-case inheritance is prohibited
 
   // calls .apply method
-  val point2 = Point(1, 2)
+  val point2: Point = Point(1, 2)
   println(point2.x)
 
   // calls .unapply method
   val Point(x, y) = point2
 
-  val point3 = point2.copy(x = 3)
+  val point3: Point = point2.copy(x = 3)
   println(point3.toString) // Point(3, 2)
 
   // Exercise. Implement an algorithm for finding the minimum bounding rectangle

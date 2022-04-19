@@ -1,6 +1,4 @@
-package dev.codescreen
-
-import scala.io.Source
+package com.evolutiongaming.bootcamp.basics
 
 object ControlStructuresHomework1 {
   type Error = String
@@ -9,14 +7,27 @@ object ControlStructuresHomework1 {
   // return error message "$age is too high, are you human?" if age is higher than 150
   // return error message "$age is negative, we do not serve unborn people" if age is lower than 0
   // use if-else
-  def isAdultIf(age: Int): Either[Error, Boolean] = ???
+  def isAdultIf(age: Int): Either[Error, Boolean] =
+    if (age < 0) Left("%d is negative, we do not serve unborn people".format(age))
+    else if (age > 150) Left("%d is too high, are you human?".format(age))
+    else if (age > 17) Right(true)
+    else Right(false)
 
   // same as isAdultIf, but use match statement instead
-  def isAdultMatch(age: Int): Either[Error, Boolean] = ???
+  def isAdultMatch(age: Int): Either[Error, Boolean] =
+    age match {
+      case age if age < 0 => Left("%d is negative, we do not serve unborn people".format(age))
+      case age if age < 18 => Right(false)
+      case age if age > 150 => Left("%d is too high, are you human?".format(age))
+      case _ => Right(true)
+    }
 
   // https://en.wikipedia.org/wiki/Triangle_inequality, consider degenerate triangles invalid
   // can you do it without using any control structures?
-  def isValidTriangle(a: Double, b: Double, c: Double): Boolean = ???
+  def isValidTriangle(a: Double, b: Double, c: Double): Boolean = {
+    val sides = List(a, b, c).sorted
+    sides.head + sides(1) > sides(2)
+  }
 
   // IT company located in Wakanda is searching for a new programmer. Due to high interest it needs
   // a way to filter out candidates that are not suitable for this job.
@@ -36,10 +47,27 @@ object ControlStructuresHomework1 {
   //
   // All input is valid, e.g. candidate can't have negative years of experience
   def isValidCandidate(
-    country: String,
-    passedTests: Int,
-    yearsOfExperience: Int,
-    hasEducation: Boolean,
-    starsOnGithub: Int
-  ): Boolean = ???
+                        country: String,
+                        passedTests: Int,
+                        yearsOfExperience: Int,
+                        hasEducation: Boolean,
+                        starsOnGithub: Int
+                      ): Boolean = {
+    var points = 0
+    var isValid = false
+    val neighboringCountries = List("Narnia", "Skyrim", "Amestris")
+    if (passedTests < 5) return isValid
+
+    if (country == "Wakanda") points += 3
+    if (neighboringCountries.contains(country)) points += 1
+    if (passedTests > 5) points += passedTests - 5
+    if (yearsOfExperience < 5) points += yearsOfExperience
+    if (yearsOfExperience >= 5) points += 5
+    if (hasEducation) points += 3
+    if (Math.floor(Math.log10(starsOnGithub)).toInt >= 1) points += Math.floor(Math.log10(starsOnGithub)).toInt
+
+    if (points > 9) isValid = true
+
+    isValid
+  }
 }

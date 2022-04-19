@@ -189,7 +189,7 @@ object ControlStructures {
   }
 
   // Question. What is the value of this code?
-  val listMapExample = List(1, 2, 3).map(x => x * 2)
+  val listMapExample: Seq[Int] = List(1, 2, 3).map(x => x * 2)
 
   // As we will see in later lessons, `map` is a method that `Functor`-s have, and there are more `Functor`-s
   // than just collections (`IO`, `Future`, `Either`, `Option` are all `Functor`-s too).
@@ -207,7 +207,7 @@ object ControlStructures {
   }
 
   // Question. What is the value of this code?
-  val listFlatMapExample = List(1, 2, 3).flatMap(x => List(x, x * 2))
+  val listFlatMapExample: Seq[Int] = List(1, 2, 3).flatMap(x => List(x, x * 2))
 
   // Question. Do you think only collections can have `flatMap`?
 
@@ -222,7 +222,7 @@ object ControlStructures {
   }
 
   // Question. What is the value of this code?
-  val listFilterExample = List(1, 2, 3).filter(_ % 2 == 0)
+  val listFilterExample: Seq[Int] = List(1, 2, 3).filter(_ % 2 == 0)
 
   // For Comprehensions
 
@@ -241,18 +241,18 @@ object ControlStructures {
   val a = List(1, 2, 3)
   val b = List(10, 100)
 
-  val c = for {
+  val c: Seq[Int] = for {
     x <- a
     y <- b
   } yield x * y
 
-  val d = a.flatMap(x => b.map(y => x * y))
+  val d: Seq[Int] = a.flatMap(x => b.map(y => x * y))
 
   // Question: What is the value of `c` above?
   // Question: What is the value of `d` above?
 
   // You can also add `if` guards to `for` comprehensions:
-  val e = for {
+  val e: Seq[Int] = for {
     x <- a // generator
     z  = x % 2 // definition
     if z == 1 // filter expression

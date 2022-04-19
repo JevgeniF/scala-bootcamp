@@ -154,10 +154,10 @@ object Basics {
 
   // Equality
   val string6 = "abcc"
-  val string7 = "ab" + "c" * 2
+  val string7: String = "ab" + "c" * 2
 
-  string6 == string7 // true - equality comparison, uses the `equals` method
-  string6 eq string7 // false - reference equality - are they the same object?
+  // true - equality comparison, uses the `equals` method
+  // false - reference equality - are they the same object?
 
   // Note that this is different than Java.
   // Other ways of comparing values are also common, e.g., https://typelevel.org/cats/typeclasses/eq.html.
@@ -203,12 +203,12 @@ object Basics {
   // Blocks and Expressions
 
   // Expressions are computable statements
-  val expressionResult = 1 + 2 // == 3
+  val expressionResult: Int = 1 + 2 // == 3
 
   // You can combine expressions into blocks by surrounding them with `{` and `}`.
   // The result of the last expression in the block is the result of the block:
 
-  val blockResult = {
+  val blockResult: Int = {
     val x = 1 + 2
     x * 2
   } // == 6
@@ -237,18 +237,18 @@ object Basics {
   // Try defining it using both String concatenation and interpolation.
   //
   // Note. `???` can be used to indicate code that is yet to be implemented.
-  def helloMethod(name: String): String = s"Hello, ${name}!"
+  def helloMethod(name: String): String = s"Hello, $name!"
 
   // Exercise. Define a method "add" which takes two integers and returns their sum.
   def add(a: Int, b: Int): Int = a + b // replace with a correct implementation
 
   // You can use parameter names to specify them in a different order
-  val sum1 = add(b = 2, a = 3) // addition is commutative though so it doesn't change the result
+  val sum1: Int = add(b = 2, a = 3) // addition is commutative though so it doesn't change the result
 
   // Methods can have default parameters
   def addNTimes(x: Int, y: Int, times: Int = 1): Int = x + y * times
-  val sum2 = addNTimes(2, 3) // 5, because 2 + 3 * 1
-  val sum3 = addNTimes(2, 3, 4) // 14, because 2 + 3 * 4
+  val sum2: Int = addNTimes(2, 3) // 5, because 2 + 3 * 1
+  val sum3: Int = addNTimes(2, 3, 4) // 14, because 2 + 3 * 4
 
   // Functions are defined with the following syntax:
   //
@@ -368,8 +368,8 @@ object Basics {
 
   // Tuples are sometimes useful but should not be over-used as their elements aren't named.
   // Tuple elements can be accessed using `._1`, `._2` and similar, for example:
-  val pepper1 = tuple1._1
-  val pepperPrice1 = tuple1._2
+  val pepper1: String = tuple1._1
+  val pepperPrice1: Double = tuple1._2
 
   // However this should be done sparingly and instead preferring the following destructuring form:
   val (pepper3, pepperPrice3) = tuple1

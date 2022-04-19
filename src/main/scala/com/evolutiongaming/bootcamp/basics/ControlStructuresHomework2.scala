@@ -1,6 +1,9 @@
 package com.evolutiongaming.bootcamp.basics
 
+import com.evolutiongaming.bootcamp.basics.ControlStructuresHomework2.Command.{Average, Divide, Max, Min, Sum}
+
 import scala.io.Source
+import scala.language.postfixOps
 
 object ControlStructuresHomework2 {
   // Homework
@@ -41,35 +44,57 @@ object ControlStructuresHomework2 {
 
   // Adjust `Result` and `ChangeMe` as you wish - you can turn Result into a `case class` and remove the `ChangeMe` if
   // you think it is the best model for your solution, or just have other `case class`-es implement `Result`
-  sealed trait Result
-  final case class ChangeMe(value: String) extends Result
+  final case class Result(comm: Command, res: Double)
 
   def parseCommand(x: String): Either[ErrorMessage, Command] = {
-    ??? // implement this method
-    // Implementation hints:
-    // You can use String#split, convert to List using .toList, then pattern match on:
-    //   case x :: xs => ???
+    val inputList = x.split(" ").map(_.trim)
+    val command = inputList.head.toLowerCase()
+    val numbers = try inputList.tail.map(x => x.toDouble).toList
+    catch { case _: Exception => return Left(ErrorMessage(x))}
 
-    // Consider how to handle extra whitespace gracefully (without errors).
+    if (numbers.isEmpty) return Left(ErrorMessage(x))
+
+    command match {
+      case command if command == "divide" && numbers.length == 2 => Right(Divide(numbers.head, numbers(1)))
+      case command if command  == "sum"  => Right(Sum(numbers))
+      case command if command == "average" => Right(Average(numbers))
+      case command if command == "min" => Right(Min(numbers))
+      case command if command == "max" => Right(Max(numbers))
+      case _ => Left(ErrorMessage(x))
+    }
   }
 
   // should return an error (using `Left` channel) in case of division by zero and other
   // invalid operations
   def calculate(x: Command): Either[ErrorMessage, Result] = {
-    ??? // implement this method
+    x match {
+      case Divide(dividend, divisor) => if (divisor != 0)
+        Right(Result(x, dividend / divisor)) else Left(ErrorMessage("Division by zero is prohibited"))
+      case Sum(numbers) => Right(Result(x, numbers.sum))
+      case Average(numbers) => Right(Result(x, numbers.sum / numbers.length))
+      case Min(numbers) => Right(Result(x, numbers.min))
+      case Max(numbers) => Right(Result(x, numbers.max))
+    }
   }
 
   def renderResult(x: Result): String = {
-    ??? // implement this method
+    x.comm match {
+      case Divide(dividend, divisor) => s"$dividend divided by $divisor is ${x.res}"
+      case Sum(numbers) => s"the sum of ${numbers.mkString(" ")} is ${x.res}"
+      case Average(numbers) => s"the average of ${numbers.mkString(" ")} is ${x.res}"
+      case Min(numbers) => s"the minimum of ${numbers.mkString(" ")} is ${x.res}"
+      case Max(numbers) => s"the maximum of ${numbers.mkString(" ")} is ${x.res}"
+      case x.comm => "Unexpected!"
+    }
   }
 
   def process(x: String): String = {
-    import cats.implicits._
-    // the import above will enable useful operations on Either-s such as `leftMap`
-    // (map over the Left channel) and `merge` (convert `Either[A, A]` into `A`),
-    // but you can also avoid using them using pattern matching.
-
-    ??? // implement using a for-comprehension
+    val rendered = for {
+      comm <- parseCommand(x)
+      res <- calculate(comm)
+      ren = renderResult(res)
+    } yield ren
+    rendered.fold(left => s"Error: ${left.value}", right => right)
   }
 
   // This `main` method reads lines from stdin, passes each to `process` and outputs the return value to stdout

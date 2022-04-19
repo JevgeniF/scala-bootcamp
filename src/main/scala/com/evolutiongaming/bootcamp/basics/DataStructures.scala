@@ -1,7 +1,6 @@
 package com.evolutiongaming.bootcamp.basics
 
-import shapeless.Strict.apply
-
+import scala.collection.mutable.ListBuffer
 import scala.util.Try
 
 object DataStructures {
@@ -15,19 +14,19 @@ object DataStructures {
   // Immutable collections never change, however they have operations that return new collections with
   // added, removed or updated elements. The original collection, however, remains unchanged.
 
-  val mutableList = scala.collection.mutable.ListBuffer(1, 2, 3)
+  val mutableList: ListBuffer[Int] = scala.collection.mutable.ListBuffer(1, 2, 3)
   mutableList.update(1, -1)
 
-  val immutableList1 = scala.collection.immutable.List(1, 2, 3)
-  val updatedImmutableList = immutableList1.updated(1, -1)
+  val immutableList1: List[Int] = scala.collection.immutable.List(1, 2, 3)
+  val updatedImmutableList: List[Int] = immutableList1.updated(1, -1)
 
-  val doTheyHaveEqualContents1 = mutableList == updatedImmutableList // true
-  val doTheyHaveEqualContents2 = (mutableList zip updatedImmutableList) forall { case (a, b) => a == b }
+  val doTheyHaveEqualContents1: Boolean = mutableList == updatedImmutableList // true
+  val doTheyHaveEqualContents2: Boolean = (mutableList zip updatedImmutableList) forall { case (a, b) => a == b }
 
   // Arrays
   //
   // Arrays are mutable, indexed collections which are equivalent to Java's array's. They are indexed from 0.
-  val array = Array(1, 2, 3, 4, 5)
+  val array: Array[Int] = Array(1, 2, 3, 4, 5)
   array(2) // read the 3rd element, it will be 3
   array(3) = 7 // update the 4th element to be 7
 
@@ -38,22 +37,22 @@ object DataStructures {
   // or obtaining the "tail" (all elements except the first one) are fast operations.
 
   val immutableList2 = List(1, 2, 3)
-  val immutableList3 = 1 :: 2 :: 3 :: Nil
+  val immutableList3: List[Int] = 1 :: 2 :: 3 :: Nil
   require(immutableList2 == immutableList3) // the two ways above are the same
 
-  val emptyList1 = Nil
+  val emptyList1: Nil.type = Nil
   val emptyList2 = List()
-  val emptyList3 = List.empty
+  val emptyList3: List[Nothing] = List.empty
 
-  val prepend4 = 4 :: immutableList2 // 4 :: 1 :: 2 :: 3 :: Nil
-  val prepend42 = 5 :: immutableList2 // 5 :: 1 :: 2 :: 3 :: Nil
-  val tailOfList = immutableList2.tail // 2 :: 3 :: Nil
+  val prepend4: List[Int] = 4 :: immutableList2 // 4 :: 1 :: 2 :: 3 :: Nil
+  val prepend42: List[Int] = 5 :: immutableList2 // 5 :: 1 :: 2 :: 3 :: Nil
+  val tailOfList: List[Int] = immutableList2.tail // 2 :: 3 :: Nil
 
-  val joinLists = immutableList2 ::: List(8, 9) // 1 :: 2 :: 3 :: 8 :: 9 :: Nil
+  val joinLists: List[Int] = immutableList2 ::: List(8, 9) // 1 :: 2 :: 3 :: 8 :: 9 :: Nil
 
-  val headOfList1 = Try(emptyList1.head)// what will happen here?!
-  val headOfList2 = emptyList1.headOption // None
-  val headOfList3 = immutableList2.headOption // Some(1)
+  val headOfList1: Try[Nothing] = Try(emptyList1.head)// what will happen here?!
+  val headOfList2: None.type = emptyList1.headOption // None
+  val headOfList3: Option[Int] = immutableList2.headOption // Some(1)
 
   // Question. We have seen `Nil`, `None`, `Nothing` and `null` so far. What do they each mean?
 
@@ -63,9 +62,9 @@ object DataStructures {
   // and updates, as well as fast append and prepend.
 
   val vector1 = Vector(1, 2, 3, 4)
-  val vector2 = 5 +: vector1 // prepend
-  val vector3 = vector1 :+ 6 // append
-  val vector4 = vector2 ++ vector3 // concatenate
+  val vector2: Vector[Int] = 5 +: vector1 // prepend
+  val vector3: Vector[Int] = vector1 :+ 6 // append
+  val vector4: Vector[Int] = vector2 ++ vector3 // concatenate
 
   // Sets
   //
@@ -77,8 +76,8 @@ object DataStructures {
   vegetables("apple") // false
   vegetables.contains("tomatoes") // true, same thing
 
-  val moreVegetables = vegetables + "avocado"
-  val lessVegetables = moreVegetables - "peppers"
+  val moreVegetables: Set[String] = vegetables + "avocado"
+  val lessVegetables: Set[String] = moreVegetables - "peppers"
 
   // Exercise. Write a function that checks if all values in a `List` are equal.
   // Think about what you think your function should return if `list` is empty, and why.
@@ -103,10 +102,10 @@ object DataStructures {
     "olives" -> 17,
   )
 
-  val moreVegetablePrices = vegetablePrices + ("pumpkins" -> 3)
-  val lessVegetableWeights = vegetableWeights - "pumpkins"
+  val moreVegetablePrices: Map[String, Int] = vegetablePrices + ("pumpkins" -> 3)
+  val lessVegetableWeights: Map[String, Int] = vegetableWeights - "pumpkins"
 
-  val questionableMap = vegetableWeights ++ vegetablePrices
+  val questionableMap: Map[String, Int] = vegetableWeights ++ vegetablePrices
 
   // Question. Why should `questionableMap` be considered questionable?
 
