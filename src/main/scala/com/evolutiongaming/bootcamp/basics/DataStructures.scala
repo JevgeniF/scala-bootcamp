@@ -1,5 +1,7 @@
 package com.evolutiongaming.bootcamp.basics
 
+import shapeless.Strict.apply
+
 import scala.util.Try
 
 object DataStructures {
@@ -81,7 +83,7 @@ object DataStructures {
   // Exercise. Write a function that checks if all values in a `List` are equal.
   // Think about what you think your function should return if `list` is empty, and why.
   def allEqual[T](list: List[T]): Boolean = {
-    false // TODO: implement
+    list.toSet.size == 1
   }
 
   // Maps
@@ -123,7 +125,8 @@ object DataStructures {
   // `vegetableAmounts` and prices per unit from `vegetablePrices`. Assume the price is 10 if not available
   // in `vegetablePrices`.
   val totalVegetableCost: Int = {
-    17 // implement here
+    vegetableAmounts.foldLeft(0)((total, vegetable) =>
+      total + vegetablePrices.getOrElse(vegetable._1, 10) * vegetable._2)
   }
 
   // Exercise. Given the vegetable weights (per 1 unit of vegetable) in `vegetableWeights` and vegetable
@@ -131,8 +134,11 @@ object DataStructures {
   //
   // For example, the total weight of "olives" is 2 * 32 == 64.
   val totalVegetableWeights: Map[String, Int] = { // implement here
-    Map()
-  }
+    for {
+      (vegetable, weight) <- vegetableWeights
+      totalWeight = vegetableAmounts.getOrElse(vegetable, 0) * weight
+    } yield (vegetable, totalWeight)
+  }.filter(_._2 != 0)
 
   // Ranges and Sequences
   val inclusiveRange: Seq[Int] = 2 to 4    // 2, 3, 4, or <=
@@ -192,9 +198,7 @@ object DataStructures {
   //   - For other `n`, for each `set` element `elem`, generate all subsets of size `n - 1` from the set
   //     that don't include `elem`, and add `elem` to them.
   def allSubsetsOfSizeN[A](set: Set[A], n: Int): Set[Set[A]] = {
-    // replace with correct implementation
-    println(n)
-    Set(set)
+    set.subsets(n).toSet
   }
 
   // Homework
@@ -214,5 +218,12 @@ object DataStructures {
   //
   // Input `Map("a" -> 1, "b" -> 2, "c" -> 4, "d" -> 1, "e" -> 0, "f" -> 2, "g" -> 2)` should result in
   // output `List(Set("e") -> 0, Set("a", "d") -> 1, Set("b", "f", "g") -> 2, Set("c") -> 4)`.
-  def sortConsideringEqualValues[T](map: Map[T, Int]): List[(Set[T], Int)] = ???
+  def sortConsideringEqualValues[T](map: Map[T, Int]): List[(Set[T], Int)] = {
+    val map1 = map.groupBy {
+      case (_, value) => value
+    } map {
+      case (key, value) => value.keySet -> key
+    }
+    map1.toList.sortBy(_._2)
+  }
 }
